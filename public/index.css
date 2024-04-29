@@ -208,7 +208,7 @@ li{
 
 }
 .news-item img{
-    width: 8vh;
+    width: auto;
     height: 8vh;
     padding: 1vmin;
 }
