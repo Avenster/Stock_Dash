@@ -170,6 +170,9 @@ li{
     background-color: #131722;
     border: 1px solid rgba(255, 255, 255, 0.09);
     border-radius: 1vmin;
+    padding-top: 1vmin;
+    padding-bottom: 1vmin;
+    overflow-y: scroll;
 }
 .change{
     color: aquamarine;
@@ -189,6 +192,7 @@ li{
     height: 100%;
     display: flex;
     flex-direction: column;
+
 }
 
 .news-item{
@@ -199,15 +203,19 @@ li{
     flex-direction: row;
     justify-content: space-evenly;
     border: 1px solid rgba(255, 255, 255, 0.1);
+   border-radius: 0.8vmin;
 
 }
 .news-item img{
     width: 8vh;
     height: 8vh;
+    padding: 1vmin;
 }
-.news-item h2{
-    font-size: 2.5vmin;
+.news-item p{
+    font-size: 2.2vmin;
     line-height: 2.1vh;
     font-weight: 400;
     font-family: 'nats',sans-serif;
+    padding: 1vmin;
+
 }

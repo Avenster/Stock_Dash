@@ -121,7 +121,7 @@
                 data.JtKRv.forEach((item, index) => {
                     const newsContainer = document.createElement('div'); // Create a new container for each news item
                     newsContainer.classList.add('news-item'); // Add a class for styling
-                    newsContainer.innerHTML += `<h2>${item}</h2>`; // Add heading
+                    newsContainer.innerHTML += `<p>${item}</p>`; // Add heading
                     const imageUrl = data.Quavad[index]; // Get image URL for the corresponding news item
                     if (imageUrl) {
                         fetch(`http://127.0.0.1:5000/api/image?url=${encodeURIComponent(imageUrl)}`)
