@@ -1,0 +1,76 @@
+<!-- home.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>GlobalVIZ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script>
+        function reloadPage() {
+            setTimeout(function() {
+                window.location.reload();
+            }, 30000); // 30 seconds in milliseconds
+        }
+
+        window.onload = reloadPage;
+    </script>
+
+    <div class="home-main">
+    <div class="bg"></div>
+    <div class="home-1">
+        <h1>GlobalVIZ</h1>
+        <p>The best trades require research, then commitment.</p>
+        <button><a href="index"><p><img src="Vector.svg" alt=""></p><span> Go To Dashboard</span></a></button>
+        <a>Welcome <%= data.name %></a>
+        <div class="indices">
+            <div class="nifty">
+                <div class="bit">
+                    <img src="bit.svg" alt="">
+                </div>
+                <div>
+                    <p>Bitcoin USD</p>
+                    <p><%= bitcoinPrice %></p>
+                </div>
+                <div>
+                    <a href="#">
+                    +0.67%
+                    </a>
+                </div>
+                
+            </div>
+            <div class="nifty">
+                <div class="bit">
+                    <img src="bit.svg" alt="">
+                </div>
+                <div>
+                    <p>Bitcoin USD</p>
+                    <p><%= bitcoinPrice %></p>
+                </div>
+                <div>
+                    <a href="#">
+                    +0.67%
+                    </a>
+                </div>
+                
+            </div>
+            <div class="nifty">
+                <div class="bit">
+                    <img src="bit.svg" alt="">
+                </div>
+                <div>
+                    <p>Bitcoin USD</p>
+                    <p><%= bitcoinPrice %></p>
+                </div>
+                <div>
+                    <a href="#">
+                    +0.67%
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+</html>

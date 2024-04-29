@@ -1,0 +1,155 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+@font-face {
+    font-family: 'cat';
+    src: url('CinzelDecorative-Regular.otf');
+}
+@font-face {
+    font-family: 'nats';
+    src: url('NATS-Regular.woff');
+}
+body{
+    background-color: black;
+    color: white;
+}
+
+.bg{
+    width: 100%;
+    position: absolute;
+    opacity: 0.9;
+    content: "";
+    z-index: -10;
+    height: 100%;
+    background-image: url('bg.jpeg');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+.home-main{
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    justify-content: center;
+    align-items: flex-end;
+    /* background-color: aqua; */
+    flex-direction: row;
+}
+
+.home-1{
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    gap: 4vh;
+    width: 90%;
+    height: 60%;
+    flex-direction: column;
+
+}
+.home-1 h1{
+    font-size: 9vmin;
+    font-family: 'cat',sans-serif;
+}
+.home-1>p{
+    font-size: 2vmin;
+    font-family: 'Inter' ,sans-serif;
+    color: #adc1c6;
+    line-height: 0;
+}
+.home-1>button{
+    border: none;
+    background-color: white;
+    color: #696969;
+    border-radius: 3rem;
+    width: 18vw;
+    height: 7vh;
+    border: 1px solid rgba(116, 116, 116, 0.408);
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    transition:background-color 0.1s ease-in-out;
+}
+.home-1>button>a{
+    width: 100%;
+    height: 100%;
+    color: #696969;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1vw;
+    text-decoration: none;
+}
+.home-1>button>p{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 30%;
+    height: 100%;
+    font-family: 'nats' ,sans-serif;
+}
+.home-1>button>span{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 67%;
+    height: 100%;
+    font-family: 'nats' ,sans-serif;
+    font-size: 2vmin;
+}
+.home-1>button:hover{
+    background-color: rgb(235, 235, 235);
+}
+
+.indices{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 14%;
+    width: 50%;
+}
+.nifty{
+    background-color: rgba(0, 0, 0, 0.445);
+    width: 31.33%;
+    height: 100%;
+    border-radius: 3rem;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    transition:background-color 0.3s ease-in-out;
+    cursor: pointer;
+
+}
+.bit{
+    display: flex;
+    width: 10%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+
+}
+.bit img{
+    height: 100%;
+    width: 100%;
+}
+.nifty>div>p{
+    font-size: 1.7vmin;
+    font-family: 'Inter',sans-serif;
+}
+.nifty>div>a{
+    color: rgb(0, 195, 143);
+    text-decoration: none;
+    font-size: 1.75vmin;
+    
+}
+.nifty:hover{
+    background-color: rgba(0, 0, 0, 0.7);
+    
+}

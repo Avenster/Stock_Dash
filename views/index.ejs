@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+    <script
+    type="text/javascript"
+    src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"
+></script>
+    </head>
+<body>
+
+    <nav class="navbar">
+        <ul>
+            <li>GlobalVIZ</li>
+            <li>Dashboard</li>
+        </ul>
+    </nav>
+    
+    <div class="main-section">
+        <div class="main2">
+            <div class="left">
+                <div class="title">
+                    <div class="title1">
+                    <div class="subt">
+                    <span>500</span>
+                    <div>
+                        <h2>S&P 500</h2>
+                        <p><%=bitcoinPrice%></p>
+                    </div>
+                    </div>
+                   
+                    <div class="sum">
+                        <p>Previous Closing Price</p>
+                        <p><%=bitcoinPrice%></p>
+                    </div>
+                    </div>
+
+                </div>
+                <div class="graph">
+                <div id="container"></div>
+                </div>
+                <div class="info">
+                    <div>
+                        <div>
+                            <img src="gp.svg" alt="">
+                        </div>
+                        <div>
+                            <h7>S&P 500</h7>
+                            <p><%=bitcoinPrice%></p>
+                        </div>
+                        <div class="change">
+                            <p>+0.45%</p>
+                        </div>
+
+                    </div>
+                    <div>
+                        <div>
+                            <img src="gp.svg" alt="">
+                        </div>
+                        <div>
+                            <h7>S&P 500</h7>
+                            <p><%=bitcoinPrice%></p>
+                        </div>
+                        <div class="change">
+                            <p>+0.45%</p>
+                        </div>
+
+                    </div>
+                    <div>
+                        <div>
+                            <img src="gp.svg" alt="">
+                        </div>
+                        <div>
+                            <h7>S&P 500</h7>
+                            <p><%=bitcoinPrice%></p>
+                        </div>
+                        <div class="change">
+                            <p>+0.45%</p>
+                        </div>
+
+                    </div>
+                    <div>
+                        <div>
+                            <img src="gp.svg" alt="">
+                        </div>
+                        <div>
+                            <h7>S&P 500</h7>
+                            <p><%=bitcoinPrice%></p>
+                        </div>
+                        <div class="change">
+                            <p>+0.45%</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="right">
+                <h1>Market News</h1>
+                <div class="headline">
+                    <!-- id="news-container"-->
+                        <div class="news-container"></div> 
+        
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('http://127.0.0.1:5000/api/news')
+            .then(response => response.json())
+            .then(data => {
+                data.JtKRv.forEach((item, index) => {
+                    document.getElementById('news-container').innerHTML += `<h1>${item}</h1>`;
+                });
+        
+                data.Quavad.forEach((item, index) => {
+                    if (item) {
+                        // Fetch image data from the /api/image endpoint
+                        fetch(`http://127.0.0.1:5000/api/image?url=${encodeURIComponent(item)}`)
+                        .then(response => response.blob()) // Convert response to a Blob
+                        .then(blob => {
+                            const imageUrl = URL.createObjectURL(blob); // Create a temporary URL for the Blob
+                            document.getElementById('news-container').innerHTML += `<img src="${imageUrl}" alt="News Image">`;
+                        })
+                        .catch(error => console.error('Error fetching image:', error));
+                    } else {
+                        document.getElementById('news-container').innerHTML += `<p>No image available</p>`;
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching news:', error));
+        });
+        
+    </script>
+    <script>
+
+        fetch('S&P500_data.json')
+          .then(response => response.json())
+          .then(data => {
+            // Call function to create chart with fetched data
+            createChart(data);
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+          });
+    
+    
+          function createChart(data) {
+            const container = document.getElementById('container');
+            // Adding red border
+            
+            const chart = LightweightCharts.createChart(
+                container,
+                {
+                    layout: {
+                        
+                        background: { color: "black" },
+                        textColor: "#DDD",
+                    },
+                    grid: {
+                        vertLines: { color: "black" },
+                        horzLines: { color: "black" },
+                    },
+                }
+            );
+
+            const table = container.getElementsByTagName('canvas')[0];
+            
+            table.style.borderRadius = '20px'; 
+            
+
+
+            chart.priceScale().applyOptions({
+                borderColor: "#71649C",
+            });
+
+            chart.timeScale().applyOptions({
+                borderColor: "#71649C",
+            });
+
+            const mainSeries = chart.addCandlestickSeries();
+            mainSeries.setData(data);
+
+            mainSeries.applyOptions({
+                wickUpColor: "rgb(54, 116, 217)",
+                upColor: "rgb(54, 116, 217)",
+                wickDownColor: "rgb(225, 50, 85)",
+                downColor: "rgb(225, 50, 85)",
+                borderVisible: false,
+            });
+
+            window.addEventListener("resize", () => {
+                const containerWidth = container.offsetWidth;
+                const containerHeight = container.offsetHeight;
+                chart.resize(containerWidth, containerHeight);
+            });
+        }
+
+      </script>
+</body>
+</html>
