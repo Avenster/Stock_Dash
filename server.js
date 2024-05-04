@@ -28,14 +28,26 @@ app.get('/', async (req, res) => {
     }
 });
 app.get('/index', async (req, res) => {
-    const response = await axios.get('http://127.0.0.1:3010/price');
+    const response = await axios.get('http://127.0.0.1:3020/price');
     const bitcoinPriceData = response.data;
-    // const bitcoinPrice = parseFloat(bitcoinPriceData['bpi']['USD']['rate'].replace(',', ''));
     const bitcoinPrice = bitcoinPriceData.price.toFixed(2);
-    console.log(bitcoinPrice);
+    const uniquePrices = bitcoinPriceData.unique_prices;
+    const uniquePerct = bitcoinPriceData.unique_perct;
+    const stockNames = ["Nifty 50", "Sensex", "Nifty B", "Nifty IT"];
 
-    res.render('index',{ bitcoinPrice: bitcoinPrice });
+
+    console.log(bitcoinPrice);
+    console.log(uniquePrices);
+    console.log(uniquePerct);
+
+    res.render('index', {
+        bitcoinPrice: bitcoinPrice,
+        uniquePrices: uniquePrices,
+        uniquePerct: uniquePerct,
+        stockNames:stockNames
+    });
 });
+
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

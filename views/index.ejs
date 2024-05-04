@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
     <link rel="stylesheet" href="index.css">
-    <script
-    type="text/javascript"
-    src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"
-></script>
-    </head>
+    <script type="text/javascript"
+        src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+
 <body>
 
     <nav class="navbar">
@@ -17,162 +17,155 @@
             <li>Dashboard</li>
         </ul>
     </nav>
-    
+
     <div class="main-section">
         <div class="main2">
             <div class="left">
                 <div class="title">
                     <div class="title1">
-                    <div class="subt">
-                    <span>500</span>
-                    <div>
-                        <h2>S&P 500</h2>
-                        <p><%=bitcoinPrice%></p>
-                    </div>
-                    </div>
-                   
-                    <div class="sum">
-                        <p>Previous Closing Price</p>
-                        <p><%=bitcoinPrice%></p>
-                    </div>
+                        <div class="subt">
+                            <span>500</span>
+                            <div>
+                                <h2>S&P 500</h2>
+                                <p>
+                                    <%=bitcoinPrice%>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="sum">
+                            <p>Previous Closing Price</p>
+                            <p>
+                                <%=bitcoinPrice%>
+                            </p>
+                        </div>
                     </div>
 
                 </div>
                 <div class="graph">
-                <div id="container"></div>
+                    <div id="container"></div>
                 </div>
                 <div class="info">
-                    <div>
+                    <% for (let i=0; i < uniquePrices.length; i++) { %>
                         <div>
-                            <img src="gp.svg" alt="">
+                            <div>
+                                <img src="greenarrow.svg" alt="" id="img<%= i %>">
+                            </div>
+                            <div>
+                                <h7>
+                                    <%= stockNames[i] %>
+                                </h7>
+                                <p>
+                                    <%= uniquePrices[i] %>
+                                </p>
+                            </div>
+                            <div class="change" id="div<%= i %>">
+                                <p id="perc<%= i %>">
+                                    <%= uniquePerct[i] %>
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <h7>S&P 500</h7>
-                            <p><%=bitcoinPrice%></p>
-                        </div>
-                        <div class="change">
-                            <p>+0.45%</p>
-                        </div>
-
-                    </div>
-                    <div>
-                        <div>
-                            <img src="gp.svg" alt="">
-                        </div>
-                        <div>
-                            <h7>S&P 500</h7>
-                            <p><%=bitcoinPrice%></p>
-                        </div>
-                        <div class="change">
-                            <p>+0.45%</p>
-                        </div>
-
-                    </div>
-                    <div>
-                        <div>
-                            <img src="gp.svg" alt="">
-                        </div>
-                        <div>
-                            <h7>S&P 500</h7>
-                            <p><%=bitcoinPrice%></p>
-                        </div>
-                        <div class="change">
-                            <p>+0.45%</p>
-                        </div>
-
-                    </div>
-                    <div>
-                        <div>
-                            <img src="gp.svg" alt="">
-                        </div>
-                        <div>
-                            <h7>S&P 500</h7>
-                            <p><%=bitcoinPrice%></p>
-                        </div>
-                        <div class="change">
-                            <p>+0.45%</p>
-                        </div>
-
-                    </div>
+                        <% } %>
                 </div>
+
+
 
             </div>
             <div class="right">
                 <h1>Market News</h1>
-                <div class="headline" >
+                <div class="headline">
                     <!-- id="news-container"-->
-                        <div  id="news-container">
-                            <!-- <div id="news-item">
+                    <div id="news-container">
+                        <!-- <div id="news-item">
                                 <h1>Dyuti is Binni(chomu)</h1>
                                 <img src="" alt="">
                             </div> -->
-                        </div> 
-        
+                    </div>
+
                 </div>
             </div>
         </div>
 
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+
+        for (let i = 0; i < 4; i++) {
+            const percElement = document.getElementById(`perc${i}`);
+            const percValue = percElement.textContent;
+            const div = document.getElementById(`div${i}`);
+            const arrow = document.getElementById(`img${i}`);
+
+            // Check if the perc value is negative
+            if (percValue.includes('-')) {
+                div.style.color = 'red';
+                arrow.src = 'redarrow.svg'
+            }
+        }
+
+
+ 
+
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
             fetch('http://127.0.0.1:5000/api/news')
-            .then(response => response.json())
-            .then(data => {
-                data.JtKRv.forEach((item, index) => {
-                    const newsContainer = document.createElement('div'); 
-                    newsContainer.classList.add('news-item'); 
-                    newsContainer.innerHTML += `<p>${item}</p>`; 
-                    const imageUrl = data.Quavad[index]; 
-                    if (imageUrl) {
-                        fetch(`http://127.0.0.1:5000/api/image?url=${encodeURIComponent(imageUrl)}`)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.blob();
-                        })
-                        .then(blob => {
-                            const image = document.createElement('img');
-                            
-                            image.src = URL.createObjectURL(blob); 
-                            image.alt = "News Image";
-                            newsContainer.appendChild(image); 
-                        })
-                        .catch(error => {
-                            console.error('Error fetching image:', error);
-                            const defaultImage = document.createElement('img');
-                            defaultImage.src = 'bg.jpeg'; 
-                            defaultImage.alt = "Default Image";
-                            newsContainer.appendChild(defaultImage); 
-                        });
-                    } else {
-                        newsContainer.innerHTML += `<p>No image available</p>`;
-                    }
-                    document.getElementById('news-container').appendChild(newsContainer); 
-                });
-            })
-            .catch(error => console.error('Error fetching news:', error));
+                .then(response => response.json())
+                .then(data => {
+                    data.JtKRv.forEach((item, index) => {
+                        const newsContainer = document.createElement('div');
+                        newsContainer.classList.add('news-item');
+                        newsContainer.innerHTML += `<p>${item}</p>`;
+                        const imageUrl = data.Quavad[index];
+                        if (imageUrl) {
+                            fetch(`http://127.0.0.1:5000/api/image?url=${encodeURIComponent(imageUrl)}`)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.blob();
+                                })
+                                .then(blob => {
+                                    const image = document.createElement('img');
+
+                                    image.src = URL.createObjectURL(blob);
+                                    image.alt = "News Image";
+                                    newsContainer.appendChild(image);
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching image:', error);
+                                    const defaultImage = document.createElement('img');
+                                    defaultImage.src = 'bg.jpeg';
+                                    defaultImage.alt = "Default Image";
+                                    newsContainer.appendChild(defaultImage);
+                                });
+                        } else {
+                            newsContainer.innerHTML += `<p>No image available</p>`;
+                        }
+                        document.getElementById('news-container').appendChild(newsContainer);
+                    });
+                })
+                .catch(error => console.error('Error fetching news:', error));
         });
     </script>
     <script>
 
         fetch('S&P500_data.json')
-          .then(response => response.json())
-          .then(data => {
-            createChart(data);
-          })
-          .catch(error => {
-            console.error('Error fetching data:', error);
-          });
-    
-    
-          function createChart(data) {
+            .then(response => response.json())
+            .then(data => {
+                createChart(data);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+
+
+        function createChart(data) {
             const container = document.getElementById('container');
             const chart = LightweightCharts.createChart(
                 container,
                 {
                     layout: {
-                        
+
                         background: { color: "black" },
                         textColor: "#DDD",
                     },
@@ -184,9 +177,9 @@
             );
 
             const table = container.getElementsByTagName('canvas')[0];
-            
-            table.style.borderRadius = '20px'; 
-            
+
+            table.style.borderRadius = '20px';
+
 
 
             chart.priceScale().applyOptions({
@@ -217,10 +210,11 @@
         // function reloadPage() {
         //     setTimeout(function() {
         //         window.location.reload();
-        //     }, 30000); 
+        //     }, 30000);
         // }
         // window.onload = reloadPage;
 
-      </script>
+    </script>
 </body>
+
 </html>
