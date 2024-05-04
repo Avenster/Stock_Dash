@@ -11,9 +11,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', async (req, res) => {
     try {
-        const response = await axios.get('https://api.coindesk.com/v1/bpi/currentprice/USD.json');
+        const response = await axios.get('http://127.0.0.1:3010/price');
         const bitcoinPriceData = response.data;
-        const bitcoinPrice = parseFloat(bitcoinPriceData['bpi']['USD']['rate'].replace(',', ''));
+        // const bitcoinPrice = parseFloat(bitcoinPriceData['bpi']['USD']['rate'].replace(',', ''));
+        const bitcoinPrice = bitcoinPriceData.price.toFixed(2);
+        console.log(bitcoinPrice);
         
         let data = {
             name: 'Dyuti Dasmahapatra',
@@ -26,9 +28,11 @@ app.get('/', async (req, res) => {
     }
 });
 app.get('/index', async (req, res) => {
-    const response = await axios.get('https://api.coindesk.com/v1/bpi/currentprice/USD.json');
+    const response = await axios.get('http://127.0.0.1:3010/price');
     const bitcoinPriceData = response.data;
-    const bitcoinPrice = parseFloat(bitcoinPriceData['bpi']['USD']['rate'].replace(',', ''));
+    // const bitcoinPrice = parseFloat(bitcoinPriceData['bpi']['USD']['rate'].replace(',', ''));
+    const bitcoinPrice = bitcoinPriceData.price.toFixed(2);
+    console.log(bitcoinPrice);
 
     res.render('index',{ bitcoinPrice: bitcoinPrice });
 });
