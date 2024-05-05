@@ -14,7 +14,7 @@ app.get('/', async (req, res) => {
         const response = await axios.get('http://127.0.0.1:3010/price');
         const bitcoinPriceData = response.data;
         // const bitcoinPrice = parseFloat(bitcoinPriceData['bpi']['USD']['rate'].replace(',', ''));
-        const bitcoinPrice = bitcoinPriceData.price.toFixed(2);
+        const bitcoinPrice = bitcoinPriceData.prices[0];
         console.log(bitcoinPrice);
         
         let data = {
@@ -30,7 +30,7 @@ app.get('/', async (req, res) => {
 app.get('/index', async (req, res) => {
     const response = await axios.get('http://127.0.0.1:3020/price');
     const bitcoinPriceData = response.data;
-    const bitcoinPrice = bitcoinPriceData.price.toFixed(2);
+    const bitcoinPrice = bitcoinPriceData.prices[0];
     const uniquePrices = bitcoinPriceData.unique_prices;
     const uniquePerct = bitcoinPriceData.unique_perct;
     const stockNames = ["Nifty 50", "Sensex", "Nifty B", "Nifty IT"];
@@ -41,6 +41,27 @@ app.get('/index', async (req, res) => {
     console.log(uniquePerct);
 
     res.render('index', {
+        bitcoinPrice: bitcoinPrice,
+        uniquePrices: uniquePrices,
+        uniquePerct: uniquePerct,
+        stockNames:stockNames
+    });
+});
+
+app.get('/sp500', async (req, res) => {
+    const response = await axios.get('http://127.0.0.1:3020/price');
+    const bitcoinPriceData = response.data;
+    const bitcoinPrice = bitcoinPriceData.prices[1];
+    const uniquePrices = bitcoinPriceData.unique_prices;
+    const uniquePerct = bitcoinPriceData.unique_perct;
+    const stockNames = ["Nifty 50", "Sensex", "Nifty B", "Nifty IT"];
+
+
+    console.log(bitcoinPrice);
+    console.log(uniquePrices);
+    console.log(uniquePerct);
+
+    res.render('sp500', {
         bitcoinPrice: bitcoinPrice,
         uniquePrices: uniquePrices,
         uniquePerct: uniquePerct,

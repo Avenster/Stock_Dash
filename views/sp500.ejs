@@ -26,7 +26,7 @@
                         <div class="subt">
                             <span>500</span>
                             <div>
-                                <a href="sp500"><h2>NIFTY_50</h2></a>
+                                <h2>S&P500</h2>
                                 <p>
                                     <%=bitcoinPrice%>
                                 </p>
@@ -107,7 +107,7 @@
         }
 
         document.getElementById("candlestick-btn").addEventListener("click", function() {
-            fetch('./Json files/Nifty50_data.json')
+            fetch('./Json files/S&P500_data.json')
                 .then(response => response.json())
                 .then(data => {
                     createCandlestickChart(data);
@@ -118,7 +118,7 @@
         });
 
         document.getElementById("line-btn").addEventListener("click", function() {
-            fetch('./Json files/Nifty50_Close_data.json')
+            fetch('./Json files/S&P500_Close_data.json')
                 .then(response => response.json())
                 .then(data => {
                     createLineChart(data);

@@ -5,18 +5,24 @@ import time
 
 app = Flask(__name__)
 
-ticker = 'INDEXNSE'  
-exchange = 'NIFTY_50' 
-url = f'https://www.google.com/finance/quote/{exchange}:{ticker}'
+tickers = ['INDEXNSE', 'INDEXSP','INDEXNASDAQ']
+exchanges = ['NIFTY_50','.INX', '.IXIC']
+
 
 def get_price():
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    class_name = "YMlKec fxKbKc"  # Class name for the price
-    price = float(soup.find(class_=class_name).text.strip()[0:].replace(",", ""))
-    return price
+    prices = []
+    for ticker, exchange in zip(tickers, exchanges):
+        url = f'https://www.google.com/finance/quote/{exchange}:{ticker}'
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        class_name = "YMlKec fxKbKc"  # Class name for the price
+        price = float(soup.find(class_=class_name).text.strip()[0:].replace(",", ""))
+        prices.append(price)
+    return prices
+
 
 def get_other_data():
+    url = f'https://www.google.com/finance/quote/{exchanges[0]}:{tickers[0]}'
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     class_name = "YMlKec"  # Class name for the price
@@ -38,14 +44,14 @@ def get_other_data():
 
     return list(unique_prices), list(unique_perct)
 
+
 @app.route('/price')
 def price():
-    price = get_price()
+    prices = get_price()
     unique_prices, unique_perct = get_other_data()
-    data = {'price': price, 'unique_prices': unique_prices, 'unique_perct': unique_perct}
+    data = {'prices': prices, 'unique_prices': unique_prices, 'unique_perct': unique_perct}
     return jsonify(data)
+
 
 if __name__ == '__main__':
     app.run(debug=True, threaded=True, port=3020)
-    while True:
-        time.sleep(10)
