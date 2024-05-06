@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', async (req, res) => {
     try {
-        const response = await axios.get('http://127.0.0.1:3010/price');
+        const response = await axios.get('http://127.0.0.1:3020/price');
         const bitcoinPriceData = response.data;
         // const bitcoinPrice = parseFloat(bitcoinPriceData['bpi']['USD']['rate'].replace(',', ''));
         const bitcoinPrice = bitcoinPriceData.prices[0];

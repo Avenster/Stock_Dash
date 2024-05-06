@@ -26,7 +26,7 @@
                         <div class="subt">
                             <span>500</span>
                             <div>
-                                <a href="sp500"><h2>NIFTY_50</h2></a>
+                                <h2>NIFTY_50</h2>
                                 <p>
                                     <%=bitcoinPrice%>
                                 </p>
@@ -201,6 +201,47 @@
             });
         }
 
+    </script>
+     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('http://127.0.0.1:5000/api/news')
+                .then(response => response.json())
+                .then(data => {
+                    data.JtKRv.forEach((item, index) => {
+                        const newsContainer = document.createElement('div');
+                        newsContainer.classList.add('news-item');
+                        newsContainer.innerHTML += `<p>${item}</p>`;
+                        const imageUrl = data.Quavad[index];
+                        if (imageUrl) {
+                            fetch(`http://127.0.0.1:5000/api/image?url=${encodeURIComponent(imageUrl)}`)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.blob();
+                                })
+                                .then(blob => {
+                                    const image = document.createElement('img');
+
+                                    image.src = URL.createObjectURL(blob);
+                                    image.alt = "News Image";
+                                    newsContainer.appendChild(image);
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching image:', error);
+                                    const defaultImage = document.createElement('img');
+                                    defaultImage.src = 'bg.jpeg';
+                                    defaultImage.alt = "Default Image";
+                                    newsContainer.appendChild(defaultImage);
+                                });
+                        } else {
+                            newsContainer.innerHTML += `<p>No image available</p>`;
+                        }
+                        document.getElementById('news-container').appendChild(newsContainer);
+                    });
+                })
+                .catch(error => console.error('Error fetching news:', error));
+        });
     </script>
     
 </body>
