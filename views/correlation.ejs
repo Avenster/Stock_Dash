@@ -13,6 +13,24 @@
         .main-svg {
             background-color: transparent !important;
         }
+        .right{
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-end;
+        }
+        .headline{
+            width: 80%;
+            display: flex;
+            justify-content: center;
+            font-family: 'nats',sans-serif;
+            align-items: center;
+            text-align: justify;
+            padding: 1vmin;
+            height: 6vh;
+        }
+        .headline h1{
+            font-size: 2vmin;
+        }
 
         .graph {
             height: 100%; /* Ensure the graph division has a defined height */
@@ -61,8 +79,8 @@
                 </div>
             </div>
             <div class="right" style="width: 40%;">
-                <div class="headline" style="height: 10%;">
-                    <h2>Predicted Cluster for the last 20 day Similarity matrix <%= prediction %></h2>
+                <div class="headline">
+                    <h1>Predicted Cluster for the last 20 day Similarity matrix <%= prediction %></h1>
                 </div>
                 <div class="mds">
                 </div>
@@ -107,7 +125,6 @@
             '^XU100.I': 'BIST 100',
             '^ISEQ': 'ISEQ 20',
         };
-
         fetch('http://localhost:3001/correlation_heatmap')
             .then(response => response.json())
             .then(data => {
@@ -147,6 +164,94 @@
                 Plotly.newPlot('heatmap-container', plotData, layout);
             })
             .catch(error => console.error('Error fetching data:', error));
+
+        document.getElementById('candlestick-btn').addEventListener('click', () => {fetch('http://localhost:3001/correlation_heatmap')
+            .then(response => response.json())
+            .then(data => {
+                if (!data) {
+                    throw new Error('No data received');
+                }
+
+                const tickers = Object.keys(data);
+                const heatmapData = tickers.map(ticker => (
+                    tickers.map(ticker2 => data[ticker][ticker2])
+                ));
+
+                const layout = {
+                    title: 'Correlation Heatmap',
+                    xaxis: {
+                        tickvals: Array.from(Array(tickers.length).keys()),
+                        ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
+                        tickangle: 90,
+                    },
+                    yaxis: {
+                        tickvals: Array.from(Array(tickers.length).keys()),
+                        ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
+                    },
+                    font: {
+                        color: 'white' // Set font color to white
+                    }
+                };
+
+                const plotData = [{
+                    z: heatmapData,
+                    x: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
+                    y: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
+                    type: 'heatmap',
+                    colorscale: 'Viridis', // Set the colorscale to Viridis
+                }];
+
+                Plotly.newPlot('heatmap-container', plotData, layout);
+            })
+            .catch(error => console.error('Error fetching data:', error));});
+            // Inside the script tag in your HTML
+
+            document.getElementById('line-btn').addEventListener('click', () => {
+                fetch('http://localhost:3001/similarity_matrix') // Assuming your server endpoint for similarity matrix is '/similarity_matrix'
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data) {
+                            throw new Error('No data received');
+                        }
+            
+                        const tickers = Object.keys(data);
+                        const heatmapData = tickers.map(ticker => (
+                            tickers.map(ticker2 => data[ticker][ticker2])
+                        ));
+            
+                        const years = Array.from({ length: 2024 - 2008 + 1 }, (v, k) => k + 2008); // Generate an array of years from 2008 to 2024
+            
+                        const layout = {
+                            title: 'Similarity Matrix',
+                            xaxis: {
+                                tickvals: Array.from(Array(tickers.length).keys()), // X-axis tick values
+                                ticktext: years, // X-axis tick labels
+                                tickangle: 90
+                            },
+                            yaxis: {
+                                tickvals: Array.from(Array(tickers.length).keys()), // Y-axis tick values
+                                ticktext: years // Y-axis tick labels
+                            },
+                            font: {
+                                color: 'white' // Set font color to white
+                            }
+                        };
+                        
+            
+                        const plotData = [{
+                            z: heatmapData,
+                            x: years,
+                            y: years,
+                            type: 'heatmap',
+                            colorscale: 'Viridis', // Set the colorscale to Viridis
+                        }];
+            
+                        Plotly.newPlot('heatmap-container', plotData, layout);
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            });
+            
+
     </script>
 </body>
 

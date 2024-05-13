@@ -73,15 +73,17 @@ app.get('/sp500', async (req, res) => {
 
 app.get('/correlation', async (req, res) => {
    
-   
     const jsonData = JSON.parse(fs.readFileSync('API/data1.json', 'utf8'));
     const predictedPrice = JSON.parse(fs.readFileSync('API/predicted_price.json'));
     const predictions = jsonData["predictions"];
     const price = predictedPrice["last_predicted_price"];
+    const similarityMatrix = jsonData.similarities; // Adjust this according to your actual data structure
+
     
     res.render('correlation', {
         prediction: predictions,
         lastPredictedPrice: price,
+        similarityMatrix: similarityMatrix,
     });
   });
 
