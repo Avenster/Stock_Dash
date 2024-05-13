@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+    <script type="text/javascript"
+        src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <ul>
+            <li>GlobalVIZ</li>
+            <li>Next Day Market Analysis</li>
+        </ul>
+    </nav>
+
+    <div class="main-section">
+        <div class="main2">
+            <div class="left" style="width: 55%;">
+                <div class="title">
+                    <div class="title1">
+                        <div class="subt">
+                            <span>500</span>
+                            <div>
+                                <h2>S&P 500</h2>
+                                <p>
+                                    <%= lastPredictedPrice %>
+                                </p>
+                            </div>
+                            <div class="buttons">
+                                <button id="candlestick-btn">Correlation</button>
+                                <button id="line-btn">Similarity</button>
+                            </div>
+                        </div>
+
+                        
+                    </div>
+
+                </div>
+                <div class="graph" style="height: 85%;">
+                   
+                    <div id="heatmap">
+                       <img src="http://127.0.0.1:5000/correlation_heatmap" alt="Correlation Heatmap" style="height: 100%; width: 100%;">
+                       <!-- <div id="heatmap-container" style="height: 100%; width: 100%;"></div> -->
+                    </div>
+                </div>
+             
+
+
+
+            </div>
+            <div class="right" style="width: 40%;">
+                
+                <div class="headline"  style="height: 10%;">
+                    <h2>Predicted Cluster for the last 20 day Similarity matrix <%= prediction %></h2>
+                   
+
+                </div>
+                <div class="mds" >
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+ 
+    <script>
+        const tickerSymbolsWithNames = {
+            '^NSEI': 'Nifty 50',
+            '^BSESN': 'BSE Sensex',
+            '^NSEBANK': 'NSE Bank',
+            '^HSI': 'Hang Seng',
+            '^TWII': 'Taiwan Weighted',
+            '^AXJO': 'S&P/ASX 200',
+            '^SET.BK': 'SET',
+            '^JKSE': 'Jakarta Composite',
+            '000001.SS': 'SSE Composite',
+            '000300.SS': 'CSI 300',
+            '^N225': 'Nikkei 225',
+            '^TPX': 'TOPIX',
+            '^STI': 'Straits Times',
+            '^IXIC': 'NASDAQ Composite',
+            '^NYA': 'NYSE Composite',
+            '^GSPC': 'S&P 500',
+            '^GSPTSE': 'S&P/TSX Composite',
+            '^MXX': 'IPC',
+            '^MERV': 'MERVAL',
+            '^BVSP': 'Bovespa',
+            '^IPSA': 'IPSA',
+            '^GDAXI': 'DAX',
+            '^FCHI': 'CAC 40',
+            '^IBEX': 'IBEX 35',
+            '^SSMI': 'SMI',
+            '^AEX': 'AEX',
+            '^BFX': 'BEL 20',
+            '^ATX': 'ATX',
+            '^PX': 'PX',
+            '^BUX': 'BUX',
+            '^TA-25': 'TA-25',
+            '^KS11': 'KOSPI',
+            '^XU100.I': 'BIST 100',
+            '^ISEQ': 'ISEQ 20',
+        };
+    
+        fetch('http://localhost:3001/correlation_heatmap')
+            .then(response => response.json())
+            .then(data => {
+                const tickers = Object.keys(data);
+                const heatmapData = [];
+                for (let i = 0; i < tickers.length; i++) {
+                    const row = [];
+                    for (let j = 0; j < tickers.length; j++) {
+                        row.push(data[tickers[i]][tickers[j]]);
+                    }
+                    heatmapData.push(row);
+                }
+    
+                const layout = {
+                    title: 'Correlation Heatmap',
+                    xaxis: {
+                        tickvals: Array.from(Array(tickers.length).keys()),
+                        ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol]),
+                        tickangle: 90,
+                    },
+                    yaxis: {
+                        tickvals: Array.from(Array(tickers.length).keys()),
+                        ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol]),
+                    },
+                    width: 800,
+                    height: 600,
+                    colorscale: 'viridis', // Set the colorscale to Viridis
+                };
+    
+                Plotly.newPlot('heatmap-container', [{
+                    z: heatmapData,
+                    type: 'heatmap',
+                }], layout);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+    
+   
+    
+</body>
+
+</html>
