@@ -5,12 +5,27 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <link rel="stylesheet" href="index.css">
-    <script type="text/javascript"
-        src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
-        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 
 <body>
+    <style>
+        .main-svg {
+            background-color: transparent !important;
+        }
+
+        .graph {
+            height: 100%; /* Ensure the graph division has a defined height */
+        }
+        #heatmap{
+            height: 100%;
+            width: 100%;
+        }
+        #heatmap-container{
+            height: 100%;
+            width: 100%;
+        }
+    </style>
 
     <nav class="navbar">
         <ul>
@@ -37,38 +52,24 @@
                                 <button id="line-btn">Similarity</button>
                             </div>
                         </div>
-
-                        
                     </div>
-
                 </div>
-                <div class="graph" style="height: 85%;">
-                   
+                <div class="graph">
                     <div id="heatmap">
-                       <!-- <img src="http://127.0.0.1:7700/correlation_heatmap" alt="Correlation Heatmap" style="height: 100%; width: 100%;"> -->
-                       <div id="heatmap-container" style="height: 100%; width: 100%;"></div>
+                        <div id="heatmap-container"></div>
                     </div>
                 </div>
-             
-
-
-
             </div>
             <div class="right" style="width: 40%;">
-                
-                <div class="headline"  style="height: 10%;">
+                <div class="headline" style="height: 10%;">
                     <h2>Predicted Cluster for the last 20 day Similarity matrix <%= prediction %></h2>
-                   
-
                 </div>
-                <div class="mds" >
-
+                <div class="mds">
                 </div>
             </div>
         </div>
-
     </div>
- 
+
     <script>
         const tickerSymbolsWithNames = {
             '^NSEI': 'Nifty 50',
@@ -106,19 +107,19 @@
             '^XU100.I': 'BIST 100',
             '^ISEQ': 'ISEQ 20',
         };
-        
+
         fetch('http://localhost:3001/correlation_heatmap')
             .then(response => response.json())
             .then(data => {
                 if (!data) {
                     throw new Error('No data received');
                 }
-        
+
                 const tickers = Object.keys(data);
                 const heatmapData = tickers.map(ticker => (
                     tickers.map(ticker2 => data[ticker][ticker2])
                 ));
-        
+
                 const layout = {
                     title: 'Correlation Heatmap',
                     xaxis: {
@@ -130,10 +131,11 @@
                         tickvals: Array.from(Array(tickers.length).keys()),
                         ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
                     },
-                    width: 800,
-                    height: 600,
+                    font: {
+                        color: 'white' // Set font color to white
+                    }
                 };
-        
+
                 const plotData = [{
                     z: heatmapData,
                     x: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
@@ -141,15 +143,11 @@
                     type: 'heatmap',
                     colorscale: 'Viridis', // Set the colorscale to Viridis
                 }];
-        
+
                 Plotly.newPlot('heatmap-container', plotData, layout);
             })
             .catch(error => console.error('Error fetching data:', error));
-        
     </script>
-    
-   
-    
 </body>
 
 </html>
