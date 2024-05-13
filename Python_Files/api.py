@@ -15,17 +15,16 @@ def get_price():
         url = f'https://www.google.com/finance/quote/{exchange}:{ticker}'
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
-        class_name = "YMlKec fxKbKc"  # Class name for the price
+        class_name = "YMlKec fxKbKc"  
         price = float(soup.find(class_=class_name).text.strip()[0:].replace(",", ""))
         prices.append(price)
     return prices
-
 
 def get_other_data():
     url = f'https://www.google.com/finance/quote/{exchanges[0]}:{tickers[0]}'
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
-    class_name = "YMlKec"  # Class name for the price
+    class_name = "YMlKec" 
     prices = soup.find_all(class_=class_name)
 
     class_perct = "JwB6zf V7hZne"

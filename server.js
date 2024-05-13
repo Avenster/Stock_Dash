@@ -4,10 +4,12 @@ const path = require('path');
 const app = express();
 const axios = require('axios');
 const port = 3000;
+const fs = require('fs');
 
 app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.get('/', async (req, res) => {
     try {
@@ -69,6 +71,19 @@ app.get('/sp500', async (req, res) => {
     });
 });
 
+app.get('/correlation', async (req, res) => {
+   
+   
+    const jsonData = JSON.parse(fs.readFileSync('API/data1.json', 'utf8'));
+    const predictedPrice = JSON.parse(fs.readFileSync('API/predicted_price.json'));
+    const predictions = jsonData["predictions"];
+    const price = predictedPrice["last_predicted_price"];
+    
+    res.render('correlation', {
+        prediction: predictions,
+        lastPredictedPrice: price,
+    });
+  });
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

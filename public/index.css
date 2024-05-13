@@ -32,6 +32,7 @@ li{
     text-decoration: none;
     list-style: none;
 }
+
 .main-section{
     display: flex;
     align-items: center;
@@ -70,7 +71,7 @@ li{
 }
 .subt{
     height: 100%;
-    width: 50%;
+    width: 70%;
     display: flex;
     justify-content: flex-start;
     gap: 1vw;
@@ -144,7 +145,7 @@ li{
     display: flex;
     align-items: flex-end;
     justify-content: space-evenly;
-    width: 50%;
+    width: 30%;
     height: 100%;
     flex-direction: column;
 }
@@ -195,6 +196,44 @@ li{
     overflow-y: scroll;
 
 }
+.buttons{
+display: flex;
+flex-direction: row;
+justify-content: space-evenly;
+width: 22vw;
+}
+#candlestick-btn{
+    height: 4vh;
+    background-color: #131722;
+    color: white;
+    border-radius: 1vmin;
+    font-family: 'nats', sans-serif;
+    font-size: 1.75vmin;
+    border: solid 1px rgba(255, 255, 255, 0.105); 
+    width: 10vw;
+    transition: background-color 0.3s ease-in-out;
+}
+#candlestick-btn:hover{
+    background-color: #032048ce;
+    cursor: pointer;
+}
+
+#line-btn{
+    height: 4vh;
+    background-color:#131722;
+    border: solid 1px rgba(255, 255, 255, 0.105); 
+    font-size: 1.75vmin;
+    color: white;
+    font-family: 'nats', sans-serif;
+    border-radius: 1vmin;
+    width: 10vw;
+    transition: background-color 0.3s ease-in-out;
+}
+#line-btn:hover{
+    background-color: #032048ce;
+    cursor: pointer;
+}
+
 
 .news-item{
     display: flex;

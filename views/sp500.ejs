@@ -3,10 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="index.css">
-    <script type="text/javascript"
-        src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    
 </head>
 
 <body>
@@ -92,6 +92,54 @@
 
     </div>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('http://127.0.0.1:5000/api/news')
+                .then(response => response.json())
+                .then(data => {
+                    data.JtKRv.forEach((item, index) => {
+                        const newsContainer = document.createElement('div');
+                        newsContainer.classList.add('news-item');
+                        newsContainer.innerHTML += `<p>${item}</p>`;
+                        const imageUrl = data.Quavad[index];
+                        if (imageUrl) {
+                            fetch(`http://127.0.0.1:5000/api/image?url=${encodeURIComponent(imageUrl)}`)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.blob();
+                                })
+                                .then(blob => {
+                                    const image = document.createElement('img');
+
+                                    image.src = URL.createObjectURL(blob);
+                                    image.alt = "News Image";
+                                    newsContainer.appendChild(image);
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching image:', error);
+                                    const defaultImage = document.createElement('img');
+                                    defaultImage.src = 'bg.jpeg';
+                                    defaultImage.alt = "Default Image";
+                                    newsContainer.appendChild(defaultImage);
+                                });
+                        } else {
+                            newsContainer.innerHTML += `<p>No image available</p>`;
+                        }
+                        document.getElementById('news-container').appendChild(newsContainer);
+                    });
+                })
+                .catch(error => console.error('Error fetching news:', error));
+                fetch('./Json files/S&P500_data.json')
+                .then(response => response.json())
+                .then(data => {
+                    createCandlestickChart(data);
+                })
+                .catch(error => {
+                console.error('Error fetching data:', error);
+                });
+                
+        });
 
         for (let i = 0; i < 4; i++) {
             const percElement = document.getElementById(`perc${i}`);

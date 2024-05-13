@@ -45,8 +45,8 @@
                 <div class="graph" style="height: 85%;">
                    
                     <div id="heatmap">
-                       <img src="http://127.0.0.1:5000/correlation_heatmap" alt="Correlation Heatmap" style="height: 100%; width: 100%;">
-                       <!-- <div id="heatmap-container" style="height: 100%; width: 100%;"></div> -->
+                       <!-- <img src="http://127.0.0.1:7700/correlation_heatmap" alt="Correlation Heatmap" style="height: 100%; width: 100%;"> -->
+                       <div id="heatmap-container" style="height: 100%; width: 100%;"></div>
                     </div>
                 </div>
              
@@ -106,42 +106,46 @@
             '^XU100.I': 'BIST 100',
             '^ISEQ': 'ISEQ 20',
         };
-    
+        
         fetch('http://localhost:3001/correlation_heatmap')
             .then(response => response.json())
             .then(data => {
-                const tickers = Object.keys(data);
-                const heatmapData = [];
-                for (let i = 0; i < tickers.length; i++) {
-                    const row = [];
-                    for (let j = 0; j < tickers.length; j++) {
-                        row.push(data[tickers[i]][tickers[j]]);
-                    }
-                    heatmapData.push(row);
+                if (!data) {
+                    throw new Error('No data received');
                 }
-    
+        
+                const tickers = Object.keys(data);
+                const heatmapData = tickers.map(ticker => (
+                    tickers.map(ticker2 => data[ticker][ticker2])
+                ));
+        
                 const layout = {
                     title: 'Correlation Heatmap',
                     xaxis: {
                         tickvals: Array.from(Array(tickers.length).keys()),
-                        ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol]),
+                        ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
                         tickangle: 90,
                     },
                     yaxis: {
                         tickvals: Array.from(Array(tickers.length).keys()),
-                        ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol]),
+                        ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
                     },
                     width: 800,
                     height: 600,
-                    colorscale: 'viridis', // Set the colorscale to Viridis
                 };
-    
-                Plotly.newPlot('heatmap-container', [{
+        
+                const plotData = [{
                     z: heatmapData,
+                    x: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
+                    y: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
                     type: 'heatmap',
-                }], layout);
+                    colorscale: 'Viridis', // Set the colorscale to Viridis
+                }];
+        
+                Plotly.newPlot('heatmap-container', plotData, layout);
             })
             .catch(error => console.error('Error fetching data:', error));
+        
     </script>
     
    
