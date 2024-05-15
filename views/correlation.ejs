@@ -13,36 +13,56 @@
         .main-svg {
             background-color: transparent !important;
         }
-        .right{
+
+        .right {
             display: flex;
             justify-content: flex-start;
             align-items: flex-end;
         }
-        .headline{
+
+        .headline {
             width: 80%;
             display: flex;
             justify-content: center;
-            font-family: 'nats',sans-serif;
+            font-family: 'nats', sans-serif;
             align-items: center;
             text-align: justify;
             padding: 1vmin;
             height: 6vh;
         }
-        .headline h1{
+
+        .headline h1 {
             font-size: 2vmin;
         }
 
         .graph {
-            height: 100%; /* Ensure the graph division has a defined height */
+            height: 100%;
+            /* Ensure the graph division has a defined height */
         }
-        #heatmap{
+
+        #heatmap {
             height: 100%;
             width: 100%;
         }
-        #heatmap-container{
+
+        #heatmap-container {
             height: 100%;
             width: 100%;
         }
+
+        .mds {
+            height: 100%;
+            width: 100%;
+            
+        }
+
+        canvas{
+            border: solid 1px #3C3C3C;
+            border-radius: 1vmin;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            box-sizing: border-box;
+        }
+        
     </style>
 
     <nav class="navbar">
@@ -78,9 +98,10 @@
                     </div>
                 </div>
             </div>
-            <div class="right" style="width: 40%;">
+            <div class="right" style="width: 60%;">
                 <div class="headline">
-                    <h1>Predicted Cluster for the last 20 day Similarity matrix <%= prediction %></h1>
+                    <h1>Predicted Cluster for the last 20 day Similarity matrix <%= prediction %>
+                    </h1>
                 </div>
                 <div class="mds">
                 </div>
@@ -165,92 +186,213 @@
             })
             .catch(error => console.error('Error fetching data:', error));
 
-        document.getElementById('candlestick-btn').addEventListener('click', () => {fetch('http://localhost:3001/correlation_heatmap')
+        document.getElementById('candlestick-btn').addEventListener('click', () => {
+            fetch('http://localhost:3001/correlation_heatmap')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data) {
+                        throw new Error('No data received');
+                    }
+
+                    const tickers = Object.keys(data);
+                    const heatmapData = tickers.map(ticker => (
+                        tickers.map(ticker2 => data[ticker][ticker2])
+                    ));
+
+                    const layout = {
+                        title: 'Correlation Heatmap',
+                        xaxis: {
+                            tickvals: Array.from(Array(tickers.length).keys()),
+                            ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
+                            tickangle: 90,
+                        },
+                        yaxis: {
+                            tickvals: Array.from(Array(tickers.length).keys()),
+                            ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
+                        },
+                        font: {
+                            color: 'white' // Set font color to white
+                        }
+                    };
+
+                    const plotData = [{
+                        z: heatmapData,
+                        x: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
+                        y: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
+                        type: 'heatmap',
+                        colorscale: 'Viridis', // Set the colorscale to Viridis
+                    }];
+
+                    Plotly.newPlot('heatmap-container', plotData, layout);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+        // Inside the script tag in your HTML
+
+        document.getElementById('line-btn').addEventListener('click', () => {
+            fetch('http://localhost:3001/similarity_matrix') // Assuming your server endpoint for similarity matrix is '/similarity_matrix'
+                .then(response => response.json())
+                .then(data => {
+                    if (!data) {
+                        throw new Error('No data received');
+                    }
+
+                    const tickers = Object.keys(data);
+                    const heatmapData = tickers.map(ticker => (
+                        tickers.map(ticker2 => data[ticker][ticker2])
+                    ));
+
+                    const years = Array.from({ length: 2024 - 2008 + 1 }, (v, k) => k + 2008); // Generate an array of years from 2008 to 2024
+
+                    const layout = {
+                        title: 'Similarity Matrix',
+                        xaxis: {
+                            tickvals: Array.from(Array(tickers.length).keys()), // X-axis tick values
+                            ticktext: years, // X-axis tick labels
+                            tickangle: 90
+                        },
+                        yaxis: {
+                            tickvals: Array.from(Array(tickers.length).keys()), // Y-axis tick values
+                            ticktext: years // Y-axis tick labels
+                        },
+                        font: {
+                            color: 'white' // Set font color to white
+                        }
+                    };
+
+
+                    const plotData = [{
+                        z: heatmapData,
+                        x: years,
+                        y: years,
+                        type: 'heatmap',
+                        colorscale: 'Viridis', // Set the colorscale to Viridis
+                    }];
+
+                    Plotly.newPlot('heatmap-container', plotData, layout);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+
+        fetch('http://localhost:3001/mds')
             .then(response => response.json())
             .then(data => {
-                if (!data) {
-                    throw new Error('No data received');
+                const { last_coordinates, labels, mds } = data;
+
+                // Define colors for the clusters
+                const colors = ['red', 'green', 'blue', 'orange'];
+
+                // Create trace objects for the clusters
+                const clusterTraces = labels.map((label, i) => {
+                    const indices = mds.reduce((acc, val, idx) => {
+                        if (labels[idx] === i) acc.push(idx);
+                        return acc;
+                    }, []);
+
+                    return {
+                        x: mds.filter((_, idx) => indices.includes(idx)).map(row => row[0]),
+                        y: mds.filter((_, idx) => indices.includes(idx)).map(row => row[1]),
+                        z: mds.filter((_, idx) => indices.includes(idx)).map(row => row[2]),
+                        mode: 'markers',
+                        marker: {
+                            color: colors[i],
+                            size: 3 // Smaller marker size
+                        },
+                        name: `Cluster ${i}`,
+                        type: 'scatter3d'
+                    };
+                });
+
+                // Determine the cluster for the magenta dot
+                let magentaClusterName = '';
+                for (let i = 0; i < labels.length; i++) {
+                    if (labels[i] === null) continue; // Skip null labels
+                    if (mds[i][0] === last_coordinates[0][0] &&
+                        mds[i][1] === last_coordinates[0][1] &&
+                        mds[i][2] === last_coordinates[0][2]) {
+                        magentaClusterName = `Cluster ${labels[i]}`;
+                        break;
+                    }
                 }
 
-                const tickers = Object.keys(data);
-                const heatmapData = tickers.map(ticker => (
-                    tickers.map(ticker2 => data[ticker][ticker2])
-                ));
-
-                const layout = {
-                    title: 'Correlation Heatmap',
-                    xaxis: {
-                        tickvals: Array.from(Array(tickers.length).keys()),
-                        ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
-                        tickangle: 90,
+                // Create a trace for the last_coordinates
+                const lastCoordinatesTrace = {
+                    x: [last_coordinates[0][0]], // Use last_coordinates instead of last_similarity_coordinates
+                    y: [last_coordinates[0][1]],
+                    z: [last_coordinates[0][2]],
+                    mode: 'markers',
+                    marker: {
+                        color: 'magenta',
+                        size: 6 // Smaller marker size for last_coordinates
                     },
-                    yaxis: {
-                        tickvals: Array.from(Array(tickers.length).keys()),
-                        ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
-                    },
-                    font: {
-                        color: 'white' // Set font color to white
-                    }
+                    // Set custom hover information
+                    hoverinfo: 'text',
+                    text: magentaClusterName, // Set the cluster name as hover text
+                    type: 'scatter3d'
                 };
 
-                const plotData = [{
-                    z: heatmapData,
-                    x: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
-                    y: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
-                    type: 'heatmap',
-                    colorscale: 'Viridis', // Set the colorscale to Viridis
-                }];
-
-                Plotly.newPlot('heatmap-container', plotData, layout);
-            })
-            .catch(error => console.error('Error fetching data:', error));});
-            // Inside the script tag in your HTML
-
-            document.getElementById('line-btn').addEventListener('click', () => {
-                fetch('http://localhost:3001/similarity_matrix') // Assuming your server endpoint for similarity matrix is '/similarity_matrix'
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!data) {
-                            throw new Error('No data received');
+                // Create the layout
+                const layout = {
+                    title: {
+                        text: '3D MDS Plot with K-Means Clustering (k=4)',
+                        font: {
+                            color: 'white'
                         }
-            
-                        const tickers = Object.keys(data);
-                        const heatmapData = tickers.map(ticker => (
-                            tickers.map(ticker2 => data[ticker][ticker2])
-                        ));
-            
-                        const years = Array.from({ length: 2024 - 2008 + 1 }, (v, k) => k + 2008); // Generate an array of years from 2008 to 2024
-            
-                        const layout = {
-                            title: 'Similarity Matrix',
-                            xaxis: {
-                                tickvals: Array.from(Array(tickers.length).keys()), // X-axis tick values
-                                ticktext: years, // X-axis tick labels
-                                tickangle: 90
+                    },
+                    scene: {
+                        xaxis: {
+                            title: {
+                                text: 'MDS Dimension 1',
+                                font: {
+                                    color: 'white'
+                                }
                             },
-                            yaxis: {
-                                tickvals: Array.from(Array(tickers.length).keys()), // Y-axis tick values
-                                ticktext: years // Y-axis tick labels
-                            },
-                            font: {
-                                color: 'white' // Set font color to white
+                            tickfont: {
+                                color: 'white'
                             }
-                        };
-                        
-            
-                        const plotData = [{
-                            z: heatmapData,
-                            x: years,
-                            y: years,
-                            type: 'heatmap',
-                            colorscale: 'Viridis', // Set the colorscale to Viridis
-                        }];
-            
-                        Plotly.newPlot('heatmap-container', plotData, layout);
-                    })
-                    .catch(error => console.error('Error fetching data:', error));
-            });
-            
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'MDS Dimension 2',
+                                font: {
+                                    color: 'white'
+                                }
+                            },
+                            tickfont: {
+                                color: 'white'
+                            }
+                        },
+                        zaxis: {
+                            title: {
+                                text: 'MDS Dimension 3',
+                                font: {
+                                    color: 'white'
+                                }
+                            },
+                            tickfont: {
+                                color: 'white'
+                            }
+                        },
+                        camera: {
+                            eye: {
+                                x: 2,
+                                y: 2,
+                                z: 2
+                            }
+                        }
+                    },
+                    width: 800,
+                    height: 600,
+                    showlegend: false
+                };
+
+                // Get the first element with the class 'mds'
+                const mdsDiv = document.querySelector('.mds');
+
+                // Create the plot inside the mdsDiv
+                Plotly.newPlot(mdsDiv, [...clusterTraces, lastCoordinatesTrace], layout);
+            })
+            .catch(error => console.error('Error fetching data:', error));
 
     </script>
 </body>

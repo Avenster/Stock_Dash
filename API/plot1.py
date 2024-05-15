@@ -73,7 +73,7 @@ predicted_cluster = kmeans.predict(last_similarity_coordinates)
 
 print("Predicted Cluster for the Last Similarity:", predicted_cluster[0]+1)
 
-predictions = int(predicted_cluster[0])+1
+predictions = int(predicted_cluster[0])
 
 last_similarity_coordinates_list = last_similarity_coordinates.tolist()
 
