@@ -1,75 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>GlobalVIZ</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+    <style>
+        
+    </style>
     <script>
         function reloadPage() {
-            setTimeout(function() {
+            setTimeout(function () {
                 window.location.reload();
-            }, 30000); 
+            }, 30000);
         }
 
         window.onload = reloadPage;
     </script>
 
     <div class="home-main">
-    <div class="bg"></div>
-    <div class="home-1">
-        <h1>GlobalVIZ</h1>
-        <p>The best trades require research, then commitment.</p>
-        <button><a href="index"><p><img src="Vector.svg" alt=""></p><span> Go To Dashboard</span></a></button>
-        <a>Welcome <%= data.name %></a>
-        <div class="indices">
-            <div class="nifty">
-                <div class="bit">
-                    <img src="bit.svg" alt="">
+        <div class="bg"></div>
+        <div class="home-1">
+            <h1>GlobalVIZ</h1>
+            <p>The best trades require research, then commitment.</p>
+            <button><a href="index">
+                    <p><img src="Vector.svg" alt=""></p><span> Go To Dashboard</span>
+                </a></button>
+
+            <div class="indices">
+                <div class="nifty">
+                    <div class="bit">
+                        <div class="rounded-image">
+                            <img src="nifty501.png" alt="" style="width: 105%; height: 105%;">
+                        </div>
+                    </div>
+                    <div>
+                        <p>NIFTY_50</p>
+                        <p>
+                            <%= nifty %>
+                        </p>
+                    </div>
+                    <div>
+                        <a href="#">
+                            +0.67%
+                        </a>
+                    </div>
+
                 </div>
-                <div>
-                    <p>NIFTY_50</p>
-                    <p><%= bitcoinPrice %></p>
+                <div class="nifty">
+                    <div class="bit">
+                        <div class="rounded-image">
+                            <img src="bse1.png" alt="" style="width: 105%; height: 105%;">
+                        </div>
+
+                    </div>
+                    <div>
+                        <p>BSE SENSEX</p>
+                        <p>
+                            <%= bse %>
+                        </p>
+                    </div>
+                    <div>
+                        <a href="#">
+                            +0.67%
+                        </a>
+                    </div>
+
                 </div>
-                <div>
-                    <a href="#">
-                    +0.67%
-                    </a>
+                <div class="nifty">
+                    <div class="bit">
+                        <div class="rounded-image">
+                            <img src="sp.png" alt="" style="width: 105%; height: 105%;">
+                        </div>
+                    </div>
+                    <div>
+                        <p>S&P 500</p>
+                        <p>
+                            <%= sp %>
+                        </p>
+                    </div>
+                    <div>
+                        <a href="#">
+                            +0.67%
+                        </a>
+                    </div>
+
                 </div>
-                
-            </div>
-            <div class="nifty">
-                <div class="bit">
-                    <img src="bit.svg" alt="">
-                </div>
-                <div>
-                    <p>NIFTY_50</p>
-                    <p><%= bitcoinPrice %></p>
-                </div>
-                <div>
-                    <a href="#">
-                    +0.67%
-                    </a>
-                </div>
-                
-            </div>
-            <div class="nifty">
-                <div class="bit">
-                    <img src="bit.svg" alt="">
-                </div>
-                <div>
-                    <p>NIFTY_50</p>
-                    <p><%= bitcoinPrice %></p>
-                </div>
-                <div>
-                    <a href="#">
-                    +0.67%
-                    </a>
-                </div>
-                
             </div>
         </div>
     </div>
-    </div>
 </body>
+
 </html>

@@ -20,6 +20,19 @@ def get_price():
         prices.append(price)
     return prices
 
+def get_home():
+    tickers = ["INDEXNSE","INDEXBOM","INDEXSP"]
+    exchanges = ['NIFTY_50','SENSEX','.INX']
+    prices = []
+    for ticker, exchange in zip(tickers, exchanges):
+        url = f'https://www.google.com/finance/quote/{exchange}:{ticker}'
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        class_name = "YMlKec fxKbKc"  
+        price = float(soup.find(class_=class_name).text.strip()[0:].replace(",", ""))
+        prices.append(price)
+    return prices
+
 def get_other_data():
     url = f'https://www.google.com/finance/quote/{exchanges[0]}:{tickers[0]}'
     response = requests.get(url)
@@ -48,7 +61,8 @@ def get_other_data():
 def price():
     prices = get_price()
     unique_prices, unique_perct = get_other_data()
-    data = {'prices': prices, 'unique_prices': unique_prices, 'unique_perct': unique_perct}
+    home_price = get_home()
+    data = {'prices': prices, 'unique_prices': unique_prices, 'unique_perct': unique_perct,'home_price':home_price}
     return jsonify(data)
 
 

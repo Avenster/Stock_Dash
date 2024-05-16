@@ -92,6 +92,16 @@
 
     </div>
     <script>
+            document.addEventListener("DOMContentLoaded", function () {
+            fetch('./Json files/S&P500_Close_data.json')
+                .then(response => response.json())
+                .then(data => {
+                    createCandlestickChart(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        });
         document.addEventListener("DOMContentLoaded", function () {
             fetch('http://127.0.0.1:5000/api/news')
                 .then(response => response.json())

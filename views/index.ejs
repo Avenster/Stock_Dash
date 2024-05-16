@@ -93,6 +93,17 @@
     </div>
     <script>
 
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('./Json files/Nifty50_data.json')
+                .then(response => response.json())
+                .then(data => {
+                    createCandlestickChart(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        });
+
         for (let i = 0; i < 4; i++) {
             const percElement = document.getElementById(`perc${i}`);
             const percValue = percElement.textContent;
@@ -106,7 +117,7 @@
             }
         }
 
-        document.getElementById("candlestick-btn").addEventListener("click", function() {
+        document.getElementById("candlestick-btn").addEventListener("click", function () {
             fetch('./Json files/Nifty50_data.json')
                 .then(response => response.json())
                 .then(data => {
@@ -117,7 +128,7 @@
                 });
         });
 
-        document.getElementById("line-btn").addEventListener("click", function() {
+        document.getElementById("line-btn").addEventListener("click", function () {
             fetch('./Json files/Nifty50_Close_data.json')
                 .then(response => response.json())
                 .then(data => {
@@ -202,7 +213,7 @@
         }
 
     </script>
-     <script>
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
             fetch('http://127.0.0.1:5000/api/news')
                 .then(response => response.json())
@@ -243,7 +254,7 @@
                 .catch(error => console.error('Error fetching news:', error));
         });
     </script>
-    
+
 </body>
 
 </html>

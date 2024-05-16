@@ -16,14 +16,13 @@ app.get('/', async (req, res) => {
         const response = await axios.get('http://127.0.0.1:3020/price');
         const bitcoinPriceData = response.data;
         // const bitcoinPrice = parseFloat(bitcoinPriceData['bpi']['USD']['rate'].replace(',', ''));
-        const bitcoinPrice = bitcoinPriceData.prices[0];
-        console.log(bitcoinPrice);
+        const nifty = bitcoinPriceData.home_price[0];
+        const bse = bitcoinPriceData.home_price[1];
+        const sp = bitcoinPriceData.home_price[2];
         
-        let data = {
-            name: 'Dyuti Dasmahapatra',
-            type: 'chomu'
-        };
-        res.render('home', { data: data, bitcoinPrice: bitcoinPrice });
+        
+        
+        res.render('home', { nifty:nifty,bse:bse,sp:sp });
     } catch (error) {
         console.error('Error fetching Bitcoin price:', error);
         res.status(500).send('Error fetching Bitcoin price');
