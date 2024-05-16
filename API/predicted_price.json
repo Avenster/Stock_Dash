@@ -784,5 +784,6 @@
             "^STI Straits Times Index (Singapore)": 0.22613150306029844,
             "^TWII Taiwan Weighted Index (Taiwan)": 1.0
         }
-    }
+    },
+    "num_matrices": 399
 }
