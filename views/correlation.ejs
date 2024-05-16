@@ -28,7 +28,7 @@
             align-items: center;
             text-align: justify;
             padding: 1vmin;
-            height: 6vh;
+            height: 5%;
         }
 
         .headline h1 {
@@ -43,25 +43,21 @@
         #heatmap {
             height: 100%;
             width: 100%;
+            display: flex;
+            align-items:center;
+            justify-content: center;
         }
 
         #heatmap-container {
             height: 100%;
             width: 100%;
+            display: flex;
+            align-items:center;
+            justify-content: center;
         }
 
-        .mds {
-            height: 100%;
-            width: 100%;
-            
-        }
+        
 
-        canvas{
-            border: solid 1px #3C3C3C;
-            border-radius: 1vmin;
-            border: 1px solid rgba(255, 255, 255, 0.09);
-            box-sizing: border-box;
-        }
         
     </style>
 
@@ -74,7 +70,7 @@
 
     <div class="main-section">
         <div class="main2">
-            <div class="left" style="width: 55%;">
+            <div class="left" style="width: 50%;">
                 <div class="title">
                     <div class="title1">
                         <div class="subt">
@@ -93,59 +89,25 @@
                     </div>
                 </div>
                 <div class="graph">
-                    <div id="heatmap">
+                    <div id="heatmap" >
                         <div id="heatmap-container"></div>
                     </div>
                 </div>
             </div>
-            <div class="right" style="width: 60%;">
+            <div class="right" style="width: 50%;">
                 <div class="headline">
                     <h1>Predicted Cluster for the last 20 day Similarity matrix <%= prediction %>
                     </h1>
                 </div>
-                <div class="mds">
-                </div>
+                
             </div>
         </div>
     </div>
 
     <script>
-        const tickerSymbolsWithNames = {
-            '^NSEI': 'Nifty 50',
-            '^BSESN': 'BSE Sensex',
-            '^NSEBANK': 'NSE Bank',
-            '^HSI': 'Hang Seng',
-            '^TWII': 'Taiwan Weighted',
-            '^AXJO': 'S&P/ASX 200',
-            '^SET.BK': 'SET',
-            '^JKSE': 'Jakarta Composite',
-            '000001.SS': 'SSE Composite',
-            '000300.SS': 'CSI 300',
-            '^N225': 'Nikkei 225',
-            '^TPX': 'TOPIX',
-            '^STI': 'Straits Times',
-            '^IXIC': 'NASDAQ Composite',
-            '^NYA': 'NYSE Composite',
-            '^GSPC': 'S&P 500',
-            '^GSPTSE': 'S&P/TSX Composite',
-            '^MXX': 'IPC',
-            '^MERV': 'MERVAL',
-            '^BVSP': 'Bovespa',
-            '^IPSA': 'IPSA',
-            '^GDAXI': 'DAX',
-            '^FCHI': 'CAC 40',
-            '^IBEX': 'IBEX 35',
-            '^SSMI': 'SMI',
-            '^AEX': 'AEX',
-            '^BFX': 'BEL 20',
-            '^ATX': 'ATX',
-            '^PX': 'PX',
-            '^BUX': 'BUX',
-            '^TA-25': 'TA-25',
-            '^KS11': 'KOSPI',
-            '^XU100.I': 'BIST 100',
-            '^ISEQ': 'ISEQ 20',
-        };
+    
+
+
         fetch('http://localhost:3001/correlation_heatmap')
             .then(response => response.json())
             .then(data => {
@@ -160,17 +122,25 @@
 
                 const layout = {
                     title: 'Correlation Heatmap',
+                    height: 600, // Set the desired height
+                    width: 600, // Set the desired width
                     xaxis: {
                         tickvals: Array.from(Array(tickers.length).keys()),
                         ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
                         tickangle: 90,
+                        tickfont: {
+                            size: 8
+                        }
                     },
                     yaxis: {
                         tickvals: Array.from(Array(tickers.length).keys()),
                         ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
+                        tickfont: {
+                            size: 8
+                        }
                     },
                     font: {
-                        color: 'white' // Set font color to white
+                        color: 'white'
                     }
                 };
 
@@ -193,42 +163,46 @@
                     if (!data) {
                         throw new Error('No data received');
                     }
-
                     const tickers = Object.keys(data);
                     const heatmapData = tickers.map(ticker => (
                         tickers.map(ticker2 => data[ticker][ticker2])
                     ));
-
                     const layout = {
                         title: 'Correlation Heatmap',
+                        height: 600, // Set the desired height
+                        width: 600, // Set the desired width
                         xaxis: {
                             tickvals: Array.from(Array(tickers.length).keys()),
                             ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
                             tickangle: 90,
+                            tickfont: {
+                                size: 8
+                            }
                         },
                         yaxis: {
                             tickvals: Array.from(Array(tickers.length).keys()),
                             ticktext: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
+                            tickfont: {
+                                size: 8
+                            }
                         },
                         font: {
-                            color: 'white' // Set font color to white
+                            color: 'white'
                         }
                     };
+
 
                     const plotData = [{
                         z: heatmapData,
                         x: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
                         y: tickers.map(symbol => tickerSymbolsWithNames[symbol] || symbol),
                         type: 'heatmap',
-                        colorscale: 'Viridis', // Set the colorscale to Viridis
+                        colorscale: 'Viridis'
                     }];
-
                     Plotly.newPlot('heatmap-container', plotData, layout);
                 })
                 .catch(error => console.error('Error fetching data:', error));
         });
-        // Inside the script tag in your HTML
-
         document.getElementById('line-btn').addEventListener('click', () => {
             fetch('http://localhost:3001/similarity_matrix') // Assuming your server endpoint for similarity matrix is '/similarity_matrix'
                 .then(response => response.json())
@@ -274,126 +248,7 @@
                 .catch(error => console.error('Error fetching data:', error));
         });
 
-        fetch('http://localhost:3001/mds')
-            .then(response => response.json())
-            .then(data => {
-                const { last_coordinates, labels, mds } = data;
-
-                // Define colors for the clusters
-                const colors = ['red', 'green', 'blue', 'orange'];
-
-                // Create trace objects for the clusters
-                const clusterTraces = labels.map((label, i) => {
-                    const indices = mds.reduce((acc, val, idx) => {
-                        if (labels[idx] === i) acc.push(idx);
-                        return acc;
-                    }, []);
-
-                    return {
-                        x: mds.filter((_, idx) => indices.includes(idx)).map(row => row[0]),
-                        y: mds.filter((_, idx) => indices.includes(idx)).map(row => row[1]),
-                        z: mds.filter((_, idx) => indices.includes(idx)).map(row => row[2]),
-                        mode: 'markers',
-                        marker: {
-                            color: colors[i],
-                            size: 3 // Smaller marker size
-                        },
-                        name: `Cluster ${i}`,
-                        type: 'scatter3d'
-                    };
-                });
-
-                // Determine the cluster for the magenta dot
-                let magentaClusterName = '';
-                for (let i = 0; i < labels.length; i++) {
-                    if (labels[i] === null) continue; // Skip null labels
-                    if (mds[i][0] === last_coordinates[0][0] &&
-                        mds[i][1] === last_coordinates[0][1] &&
-                        mds[i][2] === last_coordinates[0][2]) {
-                        magentaClusterName = `Cluster ${labels[i]}`;
-                        break;
-                    }
-                }
-
-                // Create a trace for the last_coordinates
-                const lastCoordinatesTrace = {
-                    x: [last_coordinates[0][0]], // Use last_coordinates instead of last_similarity_coordinates
-                    y: [last_coordinates[0][1]],
-                    z: [last_coordinates[0][2]],
-                    mode: 'markers',
-                    marker: {
-                        color: 'magenta',
-                        size: 6 // Smaller marker size for last_coordinates
-                    },
-                    // Set custom hover information
-                    hoverinfo: 'text',
-                    text: magentaClusterName, // Set the cluster name as hover text
-                    type: 'scatter3d'
-                };
-
-                // Create the layout
-                const layout = {
-                    title: {
-                        text: '3D MDS Plot with K-Means Clustering (k=4)',
-                        font: {
-                            color: 'white'
-                        }
-                    },
-                    scene: {
-                        xaxis: {
-                            title: {
-                                text: 'MDS Dimension 1',
-                                font: {
-                                    color: 'white'
-                                }
-                            },
-                            tickfont: {
-                                color: 'white'
-                            }
-                        },
-                        yaxis: {
-                            title: {
-                                text: 'MDS Dimension 2',
-                                font: {
-                                    color: 'white'
-                                }
-                            },
-                            tickfont: {
-                                color: 'white'
-                            }
-                        },
-                        zaxis: {
-                            title: {
-                                text: 'MDS Dimension 3',
-                                font: {
-                                    color: 'white'
-                                }
-                            },
-                            tickfont: {
-                                color: 'white'
-                            }
-                        },
-                        camera: {
-                            eye: {
-                                x: 2,
-                                y: 2,
-                                z: 2
-                            }
-                        }
-                    },
-                    width: 800,
-                    height: 600,
-                    showlegend: false
-                };
-
-                // Get the first element with the class 'mds'
-                const mdsDiv = document.querySelector('.mds');
-
-                // Create the plot inside the mdsDiv
-                Plotly.newPlot(mdsDiv, [...clusterTraces, lastCoordinatesTrace], layout);
-            })
-            .catch(error => console.error('Error fetching data:', error));
-
+       
     </script>
 </body>
 

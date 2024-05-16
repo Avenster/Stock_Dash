@@ -13,21 +13,6 @@ const correlationMatrix = JSON.parse(correlationData).last_correlation_matrix;
 const data = fs.readFileSync('data1.json', 'utf8');
 const similarityMatrix = JSON.parse(data).similarities;
 
-const last_coordinates = JSON.parse(data).last_similarity_coordinates
-const labels = JSON.parse(data).cluster_labels
-const mds = JSON.parse(data).mds_result
-
-
-app.get('/mds', (req, res) => {
-    // Assuming last_coordinates, labels, and mds are objects or arrays
-    const responseData = {
-        last_coordinates: last_coordinates,
-        labels: labels,
-        mds: mds
-    };
-
-    res.json(responseData);
-});
 
 
 
