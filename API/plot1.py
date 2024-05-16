@@ -8,8 +8,18 @@ from sklearn.cluster import KMeans
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import json
 
-closing_prices_df = pd.read_csv('./recent.csv',index_col='Date')
-stock_data_df = pd.read_csv('./Datasets/stock_data.csv',index_col='Date')
+closing_prices_df = pd.read_csv('./recent.csv', index_col='Date')
+stock_data_df = pd.read_csv('./Datasets/stock_data.csv', index_col='Date')
+
+# # Get the sets of column names for each DataFrame
+# closing_prices_columns = set(closing_prices_df.columns)
+# stock_data_columns = set(stock_data_df.columns)
+
+# # Check if the column sets are the same
+# if closing_prices_columns == stock_data_columns:
+#     print("Both DataFrames have the same columns.")
+# else:
+#     print("The columns of the two DataFrames are not the same.")
 
 combined_df = pd.concat([stock_data_df, closing_prices_df], axis=0, sort=False)
 
@@ -52,6 +62,10 @@ for i in range(num_matrices):
     for j in range(num_matrices):
         similarity_matrix[i, j] = calculate_similarity_matrix(correlation_matrices[i], correlation_matrices[j])
 
+null_indices = np.isnan(similarity_matrix)
+
+# Replace null values with zeros
+similarity_matrix[null_indices] = 0
 
 mds = MDS(n_components=3, dissimilarity='precomputed', random_state=42)
 mds_coordinates = mds.fit_transform(similarity_matrix)
@@ -71,7 +85,7 @@ cluster_labels_list = cluster_labels.tolist()
 
 predicted_cluster = kmeans.predict(last_similarity_coordinates)
 
-print("Predicted Cluster for the Last Similarity:", predicted_cluster[0]+1)
+print("Predicted Cluster for the Last Similarity:", predicted_cluster[0])
 
 predictions = int(predicted_cluster[0])
 

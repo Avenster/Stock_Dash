@@ -36,8 +36,11 @@ print(last_predicted_price)
 # Convert float32 to Python float
 last_predicted_price = float(last_predicted_price)
 
+with open('predicted_price.json', 'r') as json_file:
+    predicted_price_dict = json.load(json_file)
+
 # Save predicted price as JSON
-predicted_price_dict = {'last_predicted_price': last_predicted_price}
+predicted_price_dict['last_predicted_price'] =  last_predicted_price
 with open('predicted_price.json', 'w') as json_file:
     json.dump(predicted_price_dict, json_file)
 

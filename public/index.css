@@ -71,7 +71,7 @@ li{
 }
 .subt{
     height: 100%;
-    width: 70%;
+    width: 90%;
     display: flex;
     justify-content: flex-start;
     gap: 1vw;
@@ -96,13 +96,22 @@ li{
     font-size: 1.5vmin;
     font-family: 'nats',sans-serif;
 }
-.left .option{
+ .option{
     height: 10%;
     width: 100%;
 }
 
-.left .graph{
-    height: 100%;
+.graph{
+    height: 73%;
+    width: 100%;
+    /* border: solid 1px #3C3C3C; */
+    border-radius: 1vmin;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    box-sizing: border-box;
+
+}
+.graph-2{
+    height: 90%;
     width: 100%;
     /* border: solid 1px #3C3C3C; */
     border-radius: 1vmin;
@@ -111,7 +120,7 @@ li{
 
 }
 
-.left .info{
+.info{
     height: 15%;
     width: 100%;
     display: flex;
@@ -200,7 +209,7 @@ li{
 display: flex;
 flex-direction: row;
 justify-content: space-evenly;
-width: 22vw;
+width: 32vw;
 }
 #candlestick-btn{
     height: 4vh;
@@ -210,7 +219,7 @@ width: 22vw;
     font-family: 'nats', sans-serif;
     font-size: 1.75vmin;
     border: solid 1px rgba(255, 255, 255, 0.105); 
-    width: 10vw;
+    width: 9vw;
     transition: background-color 0.3s ease-in-out;
 }
 #candlestick-btn:hover{
@@ -226,15 +235,41 @@ width: 22vw;
     color: white;
     font-family: 'nats', sans-serif;
     border-radius: 1vmin;
-    width: 10vw;
+    width: 9vw;
     transition: background-color 0.3s ease-in-out;
+    text-decoration: none;
 }
 #line-btn:hover{
     background-color: #032048ce;
     cursor: pointer;
 }
+#line-btn-1{
+    height: 4vh;
+    background-color:#131722;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid 1px rgba(255, 255, 255, 0.105); 
+    font-size: 1.75vmin;
+    color: white;
+    font-family: 'nats', sans-serif;
+    border-radius: 1vmin;
+    width: 9vw;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out;
+}
+#line-btn-1:hover{
+    background-color: #032048ce;
+    cursor: pointer;
+}
 
-
+#line-btn-1>button{
+    text-decoration: none;
+    background-color: transparent;
+    color: white;
+    font-family: 'nats', sans-serif;
+    border: none;
+}
 .news-item{
     display: flex;
     width: 95%;
@@ -258,4 +293,48 @@ width: 22vw;
     font-family: 'nats',sans-serif;
     padding: 1vmin;
 
+}
+.stonks{
+    height: 10%;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: column;
+}
+.stonk-in{
+    display: flex;
+    height: 80%;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.st{
+    display: flex;
+    flex-direction: column;
+    
+    width: 80%;
+    height: 100%;
+}
+.btn>button{
+    background-color: #131722;
+    border: solid 1px rgba(255, 255, 255, 0.105); 
+    width: 11vw;
+    height: 5vh;
+    color: white;
+    border-radius: 1.2vmin;
+    transition: 0.3s color ease-in-out;
+    cursor: pointer;
+}
+.nf>button:hover{
+    color: blue;
+
+}
+.sp>button:hover{
+
+    color: red;
+
+}
+.bs>button:hover{
+    color: lightblue;tblue;
 }
