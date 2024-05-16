@@ -12,7 +12,7 @@ def csv_to_json(csv_file, json_file):
         f.write(json_data)
 
 if __name__ == "__main__":
-    csv_file = "./Nifty50_data.csv"
-    json_file = "Nifty50_data.json"
+    csv_file = "S&P500_data.csv"
+    json_file = "S&P500_data.json"
     
     csv_to_json(csv_file, json_file)

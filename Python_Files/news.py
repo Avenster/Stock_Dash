@@ -24,6 +24,38 @@ def get_news():
     
     return jsonify(news_data)
 
+@app.route('/api/nifty50')
+def news():
+    url = "https://news.google.com/search?q=nifty50&hl=en-IN&gl=IN&ceid=IN%3Aen"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, "html.parser")
+    
+    class_JtKRv_elements = soup.find_all(class_="JtKRv")
+    class_Quavad_elements = soup.find_all(class_="Quavad")
+    
+    news_data = {
+        "JtKRv": [element.text for element in class_JtKRv_elements[:10]],
+        "Quavad": [f"https://news.google.com{element.get('src')}" if element.get('src') else None for element in class_Quavad_elements[:10]]
+    }
+    
+    return jsonify(news_data)
+
+@app.route('/api/bse')
+def BSE():
+    url = "https://news.google.com/search?for=bse+sensex+today&hl=en-IN&gl=IN&ceid=IN%3Aen"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, "html.parser")
+    
+    class_JtKRv_elements = soup.find_all(class_="JtKRv")
+    class_Quavad_elements = soup.find_all(class_="Quavad")
+    
+    news_data = {
+        "JtKRv": [element.text for element in class_JtKRv_elements[:10]],
+        "Quavad": [f"https://news.google.com{element.get('src')}" if element.get('src') else None for element in class_Quavad_elements[:10]]
+    }
+    
+    return jsonify(news_data)
+
 @app.route('/api/image')
 def get_image():
     url = request.args.get('url')

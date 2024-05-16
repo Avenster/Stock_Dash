@@ -32,14 +32,20 @@ app.get('/index', async (req, res) => {
     const response = await axios.get('http://127.0.0.1:3020/price');
     const bitcoinPriceData = response.data;
     const bitcoinPrice = bitcoinPriceData.prices[0];
-    const uniquePrices = bitcoinPriceData.unique_prices;
-    const uniquePerct = bitcoinPriceData.unique_perct;
-    const stockNames = ["Nifty 50", "Sensex", "Nifty B", "Nifty IT"];
-
-
-    console.log(bitcoinPrice);
-    console.log(uniquePrices);
-    console.log(uniquePerct);
+    let stockNames = ["NIFTY 50", "Nifty IT", "SENSEX", "Nifty Bank"];
+    
+    let uniquePrices = [];
+    let uniquePerct = [];
+    
+    for (let i = 0; i < stockNames.length; i++) {
+      const tickerName = stockNames[i].replace(" ", " ");
+      const price = bitcoinPriceData.data.tickers_prices[tickerName];
+      const perct = bitcoinPriceData.data.tickers_perct[tickerName];
+      uniquePrices[i] = price;
+      uniquePerct[i] = perct;
+    }
+    
+    stockNames = ["NIFTY 50", "Nifty IT", "SENSEX", "Nifty B"];
 
     res.render('index', {
         bitcoinPrice: bitcoinPrice,
@@ -53,17 +59,60 @@ app.get('/sp500', async (req, res) => {
     const response = await axios.get('http://127.0.0.1:3020/price');
     const bitcoinPriceData = response.data;
     const bitcoinPrice = bitcoinPriceData.prices[1];
-    const uniquePrices = bitcoinPriceData.unique_prices;
-    const uniquePerct = bitcoinPriceData.unique_perct;
-    const stockNames = ["Nifty 50", "Sensex", "Nifty B", "Nifty IT"];
+    const bse = bitcoinPriceData.home_price[1];
+
+    let stockNames = ["NIFTY 50", "Nifty IT", "SENSEX", "Nifty Bank"];
+    
+    let uniquePrices = [];
+    let uniquePerct = [];
+    
+    for (let i = 0; i < stockNames.length; i++) {
+      const tickerName = stockNames[i].replace(" ", " ");
+      const price = bitcoinPriceData.data.tickers_prices[tickerName];
+      const perct = bitcoinPriceData.data.tickers_perct[tickerName];
+      uniquePrices[i] = price;
+      uniquePerct[i] = perct;
+    }
+    
+    stockNames = ["NIFTY 50", "Nifty IT", "SENSEX", "Nifty B"];
+
+    res.render('sp500', {
+        bitcoinPrice: bitcoinPrice,
+        uniquePrices: uniquePrices,
+        uniquePerct: uniquePerct,
+        stockNames:stockNames
+    });
+});
+
+app.get('/BSE', async (req, res) => {
+    const response = await axios.get('http://127.0.0.1:3020/price');
+    const bitcoinPriceData = response.data;
+    const bitcoinPrice = bitcoinPriceData.prices[1];
+    const bse = bitcoinPriceData.home_price[1];
+
+    
+    let stockNames = ["NIFTY 50", "Nifty IT", "SENSEX", "Nifty Bank"];
+    
+    let uniquePrices = [];
+    let uniquePerct = [];
+    
+    for (let i = 0; i < stockNames.length; i++) {
+      const tickerName = stockNames[i].replace(" ", " ");
+      const price = bitcoinPriceData.data.tickers_prices[tickerName];
+      const perct = bitcoinPriceData.data.tickers_perct[tickerName];
+      uniquePrices[i] = price;
+      uniquePerct[i] = perct;
+    }
+    
+    stockNames = ["NIFTY 50", "Nifty IT", "SENSEX", "Nifty B"];
 
 
     console.log(bitcoinPrice);
     console.log(uniquePrices);
     console.log(uniquePerct);
 
-    res.render('sp500', {
-        bitcoinPrice: bitcoinPrice,
+    res.render('BSE', {
+        bse: bse,
         uniquePrices: uniquePrices,
         uniquePerct: uniquePerct,
         stockNames:stockNames

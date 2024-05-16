@@ -3,10 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Nifty 50</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="index.css">
-    <script type="text/javascript"
-        src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    
 </head>
 
 <body>
@@ -25,11 +25,13 @@
                     <div class="title1">
                         <div class="subt">
                             <!-- <span>500</span> -->
-                            <img src="nifty501.png" alt="" style="width: 8%; height: 70%;">
+                           
+                                <img src="bse1.png" alt="" style="width: 8%; height: 70%;">
+                            
                             <div>
-                                <h2>NIFTY_50</h2>
+                                <h2>BSE</h2>
                                 <p>
-                                    <%=bitcoinPrice%>
+                                    <%=bse %>
                                 </p>
                             </div>
                             <div class="buttons">
@@ -41,7 +43,7 @@
                         <div class="sum">
                             <p>Previous Closing Price</p>
                             <p>
-                                <%=bitcoinPrice%>
+                                <%=bse %>
                             </p>
                         </div>
                     </div>
@@ -93,9 +95,8 @@
 
     </div>
     <script>
-
-        document.addEventListener("DOMContentLoaded", function () {
-            fetch('./Json files/Nifty50_data.json')
+            document.addEventListener("DOMContentLoaded", function () {
+            fetch('./Json files/BSE_Close_data.json')
                 .then(response => response.json())
                 .then(data => {
                     createCandlestickChart(data);
@@ -103,6 +104,54 @@
                 .catch(error => {
                     console.error('Error fetching data:', error);
                 });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('http://127.0.0.1:5000/api/bse')
+                .then(response => response.json())
+                .then(data => {
+                    data.JtKRv.forEach((item, index) => {
+                        const newsContainer = document.createElement('div');
+                        newsContainer.classList.add('news-item');
+                        newsContainer.innerHTML += `<p>${item}</p>`;
+                        const imageUrl = data.Quavad[index];
+                        if (imageUrl) {
+                            fetch(`http://127.0.0.1:5000/api/image?url=${encodeURIComponent(imageUrl)}`)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.blob();
+                                })
+                                .then(blob => {
+                                    const image = document.createElement('img');
+
+                                    image.src = URL.createObjectURL(blob);
+                                    image.alt = "News Image";
+                                    newsContainer.appendChild(image);
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching image:', error);
+                                    const defaultImage = document.createElement('img');
+                                    defaultImage.src = 'bg.jpeg';
+                                    defaultImage.alt = "Default Image";
+                                    newsContainer.appendChild(defaultImage);
+                                });
+                        } else {
+                            newsContainer.innerHTML += `<p>No image available</p>`;
+                        }
+                        document.getElementById('news-container').appendChild(newsContainer);
+                    });
+                })
+                .catch(error => console.error('Error fetching news:', error));
+                fetch('./Json files/BSE_data.json')
+                .then(response => response.json())
+                .then(data => {
+                    createCandlestickChart(data);
+                })
+                .catch(error => {
+                console.error('Error fetching data:', error);
+                });
+                
         });
 
         for (let i = 0; i < 4; i++) {
@@ -118,8 +167,8 @@
             }
         }
 
-        document.getElementById("candlestick-btn").addEventListener("click", function () {
-            fetch('./Json files/Nifty50_data.json')
+        document.getElementById("candlestick-btn").addEventListener("click", function() {
+            fetch('./Json files/S&P500_data.json')
                 .then(response => response.json())
                 .then(data => {
                     createCandlestickChart(data);
@@ -129,8 +178,8 @@
                 });
         });
 
-        document.getElementById("line-btn").addEventListener("click", function () {
-            fetch('./Json files/Nifty50_Close_data.json')
+        document.getElementById("line-btn").addEventListener("click", function() {
+            fetch('./Json files/S&P500_Close_data.json')
                 .then(response => response.json())
                 .then(data => {
                     createLineChart(data);
@@ -214,48 +263,7 @@
         }
 
     </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            fetch('http://127.0.0.1:5000/api/nifty50')
-                .then(response => response.json())
-                .then(data => {
-                    data.JtKRv.forEach((item, index) => {
-                        const newsContainer = document.createElement('div');
-                        newsContainer.classList.add('news-item');
-                        newsContainer.innerHTML += `<p>${item}</p>`;
-                        const imageUrl = data.Quavad[index];
-                        if (imageUrl) {
-                            fetch(`http://127.0.0.1:5000/api/image?url=${encodeURIComponent(imageUrl)}`)
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('Network response was not ok');
-                                    }
-                                    return response.blob();
-                                })
-                                .then(blob => {
-                                    const image = document.createElement('img');
-
-                                    image.src = URL.createObjectURL(blob);
-                                    image.alt = "News Image";
-                                    newsContainer.appendChild(image);
-                                })
-                                .catch(error => {
-                                    console.error('Error fetching image:', error);
-                                    const defaultImage = document.createElement('img');
-                                    defaultImage.src = 'bg.jpeg';
-                                    defaultImage.alt = "Default Image";
-                                    newsContainer.appendChild(defaultImage);
-                                });
-                        } else {
-                            newsContainer.innerHTML += `<p>No image available</p>`;
-                        }
-                        document.getElementById('news-container').appendChild(newsContainer);
-                    });
-                })
-                .catch(error => console.error('Error fetching news:', error));
-        });
-    </script>
-
+    
 </body>
 
 </html>
