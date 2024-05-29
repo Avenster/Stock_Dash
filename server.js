@@ -5,7 +5,6 @@ const app = express();
 const axios = require('axios');
 const port = 3000;
 const fs = require('fs');
-
 app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'public')));
